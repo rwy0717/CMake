@@ -23,6 +23,11 @@ set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
 #set(CMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG "-Wl,-R")
 #set(CMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG_SEP ":")
 
+# z/OS archiver (ar) cannot archive two file names with the same name
+# as part of the the same archive command. We must make sure the
+# object file names are distinct.
+set(CMAKE_MANGLE_OBJECT_FILE_NAMES "ON")
+
 # RPATH support on AIX is called libpath.  By default the runtime
 # libpath is paths specified by -L followed by /usr/lib and /lib.  In
 # order to prevent the -L paths from being used we must force use of

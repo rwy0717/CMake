@@ -2749,33 +2749,31 @@ cmLocalGenerator
     // Mangle the name if necessary.
     if(this->Makefile->IsOn("CMAKE_MANGLE_OBJECT_FILE_NAMES"))
       {
-      bool done;
+      bool done = true;
       int cc = 0;
-      char rpstr[100];
-      sprintf(rpstr, "_p_");
-      cmSystemTools::ReplaceString(ssin, "+", rpstr);
-      std::string sssin = sin;
+
+      cmSystemTools::ReplaceString(ssin, "+", "_p_");
       do
         {
         done = true;
-        for ( it = this->UniqueObjectNamesMap.begin();
-              it != this->UniqueObjectNamesMap.end();
-              ++ it )
+        for (it = this->UniqueObjectNamesMap.begin();
+             it != this->UniqueObjectNamesMap.end();
+             ++it)
           {
-          if ( it->second == ssin )
+          if (cmSystemTools::GetFilenameName(it->second) == cmSystemTools::GetFilenameName(ssin))
             {
             done = false;
+
+            std::ostringstream repStream;
+            repStream << "_" << cc++;
+
+            ssin.insert(ssin.rfind("."), repStream.str());
+
+            break;
             }
           }
-        if ( done )
-          {
-          break;
-          }
-        sssin = ssin;
-        cmSystemTools::ReplaceString(ssin, "_p_", rpstr);
-        sprintf(rpstr, "_p%d_", cc++);
         }
-      while ( !done );
+      while (!done);
       }
 
 #if defined(CM_LG_ENCODE_OBJECT_NAMES)
