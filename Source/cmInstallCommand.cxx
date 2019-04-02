@@ -361,10 +361,16 @@ bool cmInstallCommand::HandleTargetsMode(std::vector<std::string> const& args)
     return true;
     }
 
-  // Check whether this is a DLL platform.
-  bool dll_platform = (this->Makefile->IsOn("WIN32") ||
+  // Check whether this is a Windows platform.
+  bool windows_platform = (this->Makefile->IsOn("WIN32") ||
                        this->Makefile->IsOn("CYGWIN") ||
                        this->Makefile->IsOn("MINGW"));
+
+  // Check whether this is a z/OS platform.
+  bool zos_platform = (this->Makefile->IsOn("OS390"));
+
+  // Check whether this is a DLL platform.
+  bool dll_platform = (windows_platform || zos_platform);
 
   for(std::vector<std::string>::const_iterator
       targetIt=targetList.GetVector().begin();
@@ -453,30 +459,34 @@ bool cmInstallCommand::HandleTargetsMode(std::vector<std::string> const& args)
       case cmState::SHARED_LIBRARY:
         {
         // Shared libraries are handled differently on DLL and non-DLL
-        // platforms.  All windows platforms are DLL platforms including
-        // cygwin.  Currently no other platform is a DLL platform.
+        // platforms.  All Windows and z/OS platforms are DLL platforms.
         if(dll_platform)
           {
-          // When in namelink only mode skip all libraries on Windows.
+          // When in namelink only mode skip all libraries.
           if(namelinkMode == cmInstallTargetGenerator::NamelinkModeOnly)
             {
             continue;
             }
 
-          // This is a DLL platform.
           if(!archiveArgs.GetDestination().empty())
             {
             // The import library uses the ARCHIVE properties.
             archiveGenerator = CreateInstallTargetGenerator(target,
                                                             archiveArgs, true);
             }
-          if(!runtimeArgs.GetDestination().empty())
+          if(!runtimeArgs.GetDestination().empty() && windows_platform)
             {
             // The DLL uses the RUNTIME properties.
             runtimeGenerator = CreateInstallTargetGenerator(target,
                                                            runtimeArgs, false);
             }
-          if ((archiveGenerator==0) && (runtimeGenerator==0))
+          if(!libraryArgs.GetDestination().empty() && zos_platform)
+            {
+            // The DLL uses the RUNTIME properties.
+            libraryGenerator = CreateInstallTargetGenerator(target,
+                                                            libraryArgs, false);
+            }
+          if (archiveGenerator==0 && runtimeGenerator==0 && libraryGenerator==0)
             {
             this->SetError("Library TARGETS given no DESTINATION!");
             return false;

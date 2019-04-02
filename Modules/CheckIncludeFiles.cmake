@@ -19,6 +19,8 @@
 # The following variables may be set before calling this macro to modify
 # the way the check is run:
 #
+# ``CMAKE_PLATFORM_CHECK_INCLUDE_C_FLAGS``
+#   string of platform specific compile command line flags to check include files
 # ``CMAKE_REQUIRED_FLAGS``
 #   string of compile command line flags
 # ``CMAKE_REQUIRED_DEFINITIONS``
@@ -76,6 +78,13 @@ macro(CHECK_INCLUDE_FILES INCLUDE VARIABLE)
     if(NOT CMAKE_REQUIRED_QUIET)
       message(STATUS "Looking for ${_description}")
     endif()
+
+    set(CMAKE_C_FLAGS_SAVE ${CMAKE_C_FLAGS})
+
+    if(CMAKE_PLATFORM_CHECK_INCLUDE_C_FLAGS)
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_PLATFORM_CHECK_INCLUDE_C_FLAGS}")
+    endif()
+
     try_compile(${VARIABLE}
       ${CMAKE_BINARY_DIR}
       ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/CheckIncludeFiles.c
@@ -84,6 +93,9 @@ macro(CHECK_INCLUDE_FILES INCLUDE VARIABLE)
       -DCOMPILE_DEFINITIONS:STRING=${MACRO_CHECK_INCLUDE_FILES_FLAGS}
       "${CHECK_INCLUDE_FILES_INCLUDE_DIRS}"
       OUTPUT_VARIABLE OUTPUT)
+
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_SAVE})
+
     if(${VARIABLE})
       if(NOT CMAKE_REQUIRED_QUIET)
         message(STATUS "Looking for ${_description} - found")

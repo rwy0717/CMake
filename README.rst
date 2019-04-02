@@ -30,7 +30,7 @@ Building CMake
 Supported Platforms
 -------------------
 
-MS Windows, Mac OS X, Linux, FreeBSD, Solaris, HP-UX, IRIX, BeOS, QNX
+MS Windows, Mac OS X, Linux, FreeBSD, Solaris, HP-UX, IRIX, BeOS, QNX, z/OS
 
 Other UNIX-like operating systems may work too out of the box, if not
 it should not be a major problem to port CMake to this platform.

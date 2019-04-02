@@ -77,7 +77,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <pwd.h>
-#ifndef __VMS
+#if !defined(__VMS) && !defined(__MVS__)
 #include <sys/param.h>
 #include <termios.h>
 #endif

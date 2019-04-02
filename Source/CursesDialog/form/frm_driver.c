@@ -865,7 +865,7 @@ static int Display_Or_Erase_Field(FIELD * field, bool bEraseFlag)
         Set_Field_Window_Attributes(field,win);
       else
         {
-#if defined(__LSB_VERSION__)
+#if defined(__LSB_VERSION__) || defined(__MVS__)
         /* getattrs() would be handy, but it is not part of LSB 4.0 */
         attr_t fwinAttrs;
         short  fwinPair;

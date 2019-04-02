@@ -12,7 +12,7 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-# This module is used by the Makefile generator to determin the following variables:
+# This module is used by the Makefile generator to determine the following variables:
 # CMAKE_SYSTEM_NAME - on unix this is uname -s, for windows it is Windows
 # CMAKE_SYSTEM_VERSION - on unix this is uname -r, for windows it is empty
 # CMAKE_SYSTEM - ${CMAKE_SYSTEM}-${CMAKE_SYSTEM_VERSION}, for windows: ${CMAKE_SYSTEM}
@@ -39,7 +39,7 @@
 # Ultrix                        ULTRIX
 # cygwin                        CYGWIN_NT-5.1
 # MacOSX                        Darwin
-
+# zOS                           OS/390
 
 # find out on which system cmake runs
 if(CMAKE_HOST_UNIX)
@@ -47,7 +47,7 @@ if(CMAKE_HOST_UNIX)
   if(CMAKE_UNAME)
     exec_program(uname ARGS -s OUTPUT_VARIABLE CMAKE_HOST_SYSTEM_NAME)
     exec_program(uname ARGS -r OUTPUT_VARIABLE CMAKE_HOST_SYSTEM_VERSION)
-    if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux|CYGWIN.*|Darwin|^GNU$")
+    if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux|CYGWIN.*|Darwin|^GNU|OS/390$")
       exec_program(uname ARGS -m OUTPUT_VARIABLE CMAKE_HOST_SYSTEM_PROCESSOR
         RETURN_VALUE val)
       if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND
@@ -150,6 +150,11 @@ macro(ADJUST_CMAKE_SYSTEM_VARIABLES _PREFIX)
   # fix for CYGWIN which has windows version in it
   if(${_PREFIX}_NAME MATCHES CYGWIN)
     set(${_PREFIX}_NAME CYGWIN)
+  endif()
+  
+  # fix for OS/390, remove the /
+  if(${_PREFIX}_NAME MATCHES OS.390)
+    set(${_PREFIX}_NAME OS390)
   endif()
 
   # set CMAKE_SYSTEM to the CMAKE_SYSTEM_NAME

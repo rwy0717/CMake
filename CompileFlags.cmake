@@ -30,6 +30,11 @@ if(MSVC OR _INTEL_WINDOWS)
 else()
 endif()
 
+if(ZOS)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE=600 -qlanglvl=stdc99")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_XOPEN_SOURCE=600 -qLONGLONG")
+endif()
+
 #silence duplicate symbol warnings on AIX
 if(CMAKE_SYSTEM_NAME MATCHES "AIX")
   if(NOT CMAKE_COMPILER_IS_GNUCXX)

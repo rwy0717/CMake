@@ -54,7 +54,17 @@
 #    define _XOPEN_SOURCE_EXTENDED
 #   endif
 #  endif
+#  if defined(__MVS__)
+#   include <stdbool.h>
+#   define __bool_
+#  endif
+#  if defined(__MVS__) && defined(__cplusplus)
+extern "C" {
+#  endif
 #  include <curses.h>
+#  if defined(__MVS__) && defined(__cplusplus)
+}
+#  endif
 #  if defined(__hpux) && !defined(HAVE__XOPEN_SOURCE_EXTENDED)
 #   undef _XOPEN_SOURCE_EXTENDED
 #  endif

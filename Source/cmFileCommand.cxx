@@ -720,8 +720,10 @@ bool cmFileCommand::HandleStringsCommand(std::vector<std::string> const& args)
       // Ignore CR character to make output always have UNIX newlines.
       continue;
       }
-
-    else if((c >= 0x20 && c < 0x7F) || c == '\t' ||
+    
+    // TODO: JS - Added isprint(c) to conditions to accomodate z/OS
+    //       although this should generally be the solution
+    else if(isprint(c) || (c >= 0x20 && c < 0x7F) || c == '\t' ||
             (c == '\n' && newline_consume))
       {
       // This is an ASCII character that may be part of a string.

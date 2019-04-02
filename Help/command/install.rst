@@ -90,15 +90,14 @@ targets.  Module libraries are always treated as ``LIBRARY`` targets.
 For non-DLL platforms shared libraries are treated as ``LIBRARY``
 targets, except that those marked with the ``FRAMEWORK`` property are
 treated as ``FRAMEWORK`` targets on OS X.  For DLL platforms the DLL
-part of a shared library is treated as a ``RUNTIME`` target and the
-corresponding import library is treated as an ``ARCHIVE`` target.
-All Windows-based systems including Cygwin are DLL platforms.
-The ``ARCHIVE``, ``LIBRARY``, ``RUNTIME``, and ``FRAMEWORK`` arguments
-change the type of target to which the subsequent properties apply.
-If none is given the installation properties apply to all target
-types.  If only one is given then only targets of that type will be
-installed (which can be used to install just a DLL or just an import
-library).
+part of the shared library is treated as a ``RUNTIME`` target on Windows
+and as a ``LIBRARY`` target on z/OS. The corresponding import library
+for DLL platforms is treated as an ``ARCHIVE`` target. The ``ARCHIVE``,
+``LIBRARY``, ``RUNTIME``, and ``FRAMEWORK`` arguments change the type of
+target to which the subsequent properties apply. If none is given the
+installation properties apply to all target types.  If only one is given
+then only targets of that type will be installed (which can be used to
+install just a DLL or just an import library).
 
 The ``PRIVATE_HEADER``, ``PUBLIC_HEADER``, and ``RESOURCE`` arguments
 cause subsequent properties to be applied to installing a ``FRAMEWORK``

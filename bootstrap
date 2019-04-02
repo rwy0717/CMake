@@ -154,6 +154,13 @@ elif ${cmake_system_hpux}; then
   fi
 fi
 
+# Determine whether this is z/OS
+if echo "${cmake_system}" | grep "OS/390" >/dev/null 2>&1; then
+  cmake_system_zos=true
+else
+  cmake_system_zos=false
+fi
+
 # Choose the generator to use for bootstrapping.
 if ${cmake_system_mingw}; then
   # Bootstrapping from an MSYS prompt.
@@ -766,6 +773,7 @@ case "${cmake_system}" in
   *Darwin*) cmake_toolchains='GNU Clang' ;;
   *Linux*) cmake_toolchains='GNU Clang XL PGI PathScale' ;;
   *MINGW*) cmake_toolchains='GNU' ;;
+  *OS/390*) cmake_toolchains='XL z/OS' ;;
 esac
 
 # Toolchain compiler name table.
@@ -1170,6 +1178,49 @@ if [ "x${cmake_cxx_compiler_is_gnu}" != "x1" ]; then
   fi
 fi
 
+# Are we z/OS XL C?
+
+TMPFILE=`cmake_tmp_file`
+echo '
+#if defined(__MVS__)
+#include <stdio.h>
+int main() { printf("This is z/OS\\n"); return 0;}
+#endif
+' > ${TMPFILE}.c
+cmake_c_compiler_is_zos=0
+if cmake_try_run "${cmake_c_compiler}" \
+  "${cmake_c_flags}" "${TMPFILE}.c" >> cmake_bootstrap.log 2>&1; then
+  cmake_c_compiler_is_zos=1
+fi
+if [ "x${cmake_c_compiler_is_zos}" = "x1" ]; then
+  echo "${cmake_c_compiler} is z/OS XL compiler"
+  cmake_c_flags="${CFLAGS} -D_XOPEN_SOURCE=600 -qlanglvl=stdc99"
+else
+  echo "${cmake_c_compiler} is not z/OS XL compiler"
+fi
+rm -f "${TMPFILE}.c"
+
+# Are we z/OS C++?
+
+TMPFILE=`cmake_tmp_file`
+echo '
+#if defined(__MVS__)
+#include <iostream>
+int main() { std::cout << "This is z/OS" << std::endl; return 0;}
+#endif
+' > ${TMPFILE}.cxx
+cmake_cxx_compiler_is_zos=0
+if cmake_try_run "${cmake_cxx_compiler}" \
+  "${cmake_cxx_flags}" "${TMPFILE}.cxx" >> cmake_bootstrap.log 2>&1; then
+  cmake_cxx_compiler_is_zos=1
+fi
+if [ "x${cmake_cxx_compiler_is_zos}" = "x1" ]; then
+  echo "${cmake_cxx_compiler} is z/OS XL compiler"
+  cmake_cxx_flags="${CXXFLAGS} -D_XOPEN_SOURCE=600 -qLONGLONG"
+else
+  echo "${cmake_cxx_compiler} is not z/OS XL compiler"
+fi
+rm -f "${TMPFILE}.cxx"
 
 # Test for kwsys features
 KWSYS_NAME_IS_KWSYS=0

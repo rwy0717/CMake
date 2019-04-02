@@ -33,6 +33,8 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
+#include "ebcdic.h"
+
 /* turn off some warning as this is generated code */
 #if defined(_MSC_VER)
 #  pragma warning ( disable : 4702 ) /* unreachable code */
@@ -490,11 +492,59 @@ union yyalloc
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   360
 
-#define YYTRANSLATE(YYX)             \
+#ifdef __MVS__
+#define YYTRANSLATE(YYX)                      \
+ ((unsigned int) (YYX) <= YYMAXUTOK ? \
+ ((unsigned int) (YYX) < 256 ? yytranslate[os_toascii[YYX]] \
+ : yytranslate[YYX]) : YYUNDEFTOK)
+#else
+#define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+#endif
 
 /* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
 static const unsigned char yytranslate[] =
+#ifndef __MVS__
+{
+       0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,    55,
+      45,    46,    47,    22,     5,    21,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    60,    61,    50,    38,    24,
+      25,    63,    39,    28,    29,    30,    31,    64,    90,   127,
+     123,    91,   108,    80,   125,    77,    93,    92,    78,   107,
+      96,    75,    97,   240,   241,   242,   243,   244,   245,   246,
+     247,   248,   249,   122,    94,    76,   126,   110,   111,   124,
+     193,   194,   195,   196,   197,   198,   199,   200,   201,   209,
+     210,   211,   212,   213,   214,   215,   216,   217,   226,   227,
+     228,   229,   230,   231,   232,   233,   173,   224,   189,    95,
+     109,   121,   129,   130,   131,   132,   133,   134,   135,   136,
+     137
+};
+#else
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -534,6 +584,7 @@ static const unsigned char yytranslate[] =
       95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
      105
 };
+#endif
 
 #if YYDEBUG
 /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in

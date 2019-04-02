@@ -18,6 +18,8 @@
 # The following variables may be set before calling this macro to modify
 # the way the check is run:
 #
+# ``CMAKE_PLATFORM_CHECK_INCLUDE_CXX_FLAGS``
+#   string of platform specific compile command line flags to check include files
 # ``CMAKE_REQUIRED_FLAGS``
 #   string of compile command line flags
 # ``CMAKE_REQUIRED_DEFINITIONS``
@@ -57,9 +59,15 @@ macro(CHECK_INCLUDE_FILE_CXX INCLUDE VARIABLE)
     if(NOT CMAKE_REQUIRED_QUIET)
       message(STATUS "Looking for C++ include ${INCLUDE}")
     endif()
+    
+    set(CMAKE_CXX_FLAGS_SAVE ${CMAKE_CXX_FLAGS})
+    
     if(${ARGC} EQUAL 3)
-      set(CMAKE_CXX_FLAGS_SAVE ${CMAKE_CXX_FLAGS})
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ARGV2}")
+    endif()
+
+    if(CMAKE_PLATFORM_CHECK_INCLUDE_CXX_FLAGS)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_PLATFORM_CHECK_INCLUDE_CXX_FLAGS}")
     endif()
 
     try_compile(${VARIABLE}
@@ -71,9 +79,7 @@ macro(CHECK_INCLUDE_FILE_CXX INCLUDE VARIABLE)
       "${CHECK_INCLUDE_FILE_CXX_INCLUDE_DIRS}"
       OUTPUT_VARIABLE OUTPUT)
 
-    if(${ARGC} EQUAL 3)
-      set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_SAVE})
-    endif()
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_SAVE})
 
     if(${VARIABLE})
       if(NOT CMAKE_REQUIRED_QUIET)
