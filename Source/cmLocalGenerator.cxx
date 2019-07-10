@@ -576,6 +576,8 @@ static const char* ruleReplaceVars[] =
   "CMAKE_RANLIB",
   "CMAKE_LINKER",
   "CMAKE_CL_SHOWINCLUDES_PREFIX",
+  "CMAKE_HLASM_AS",
+  "CMAKE_HLASM_FLAGS",
   0
 };
 

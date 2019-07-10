@@ -42,6 +42,8 @@ Variables that Provide Information
    /variable/CMAKE_GENERATOR_PLATFORM
    /variable/CMAKE_GENERATOR_TOOLSET
    /variable/CMAKE_HOME_DIRECTORY
+   /variable/CMAKE_HLASM_AS
+   /variable/CMAKE_HLASM_FLAGS
    /variable/CMAKE_IMPORT_LIBRARY_PREFIX
    /variable/CMAKE_IMPORT_LIBRARY_SUFFIX
    /variable/CMAKE_JOB_POOL_COMPILE
